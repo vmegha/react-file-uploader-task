@@ -1,0 +1,10 @@
+.app {
+    background-color: var(--clr-dark-a0, white);
+    color: var(--clr-light-a0, #000000);
+}
+
+.app-header {
+    display: flex;
+    align-items: end;
+    flex-direction: column;
+}

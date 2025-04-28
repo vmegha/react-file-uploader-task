@@ -1,86 +1,107 @@
-import { ChangeEvent, useCallback, useRef, type FunctionComponent } from 'react';
-
-export enum ErrorCode {
-    FileInvalidType = 'file-invalid-type',
-    FileTooLarge = 'file-too-large',
-    FileTooSmall = 'file-too-small',
-    TooManyFiles = 'too-many-files',
-}
-
-export interface FileError {
-    message: string;
-    code: ErrorCode | string;
-}
-
-export interface FileRejection {
-    file: File;
-    errors: FileError[];
-}
+import { ErrorMessage } from '@hookform/error-message';
+import { type PropsWithChildren, useRef, useState } from 'react';
+import './Shared/FileUploader.css';
+import { type FieldValues, type FieldErrors, type UseFormRegisterReturn, type UseFormClearErrors } from 'react-hook-form';
+import { PreviewFiles, ResetFilesButton, Click_Or_Drag_File } from './Shared';
 
 export interface FileUploaderProps {
+    register: UseFormRegisterReturn;
+    label?: string;
+    setIsFileToUploadSelected: React.Dispatch<React.SetStateAction<boolean>>;
+    reset: () => void;
+    errors: FieldErrors<FieldValues>;
+    className?: string;
+    clearErrors: UseFormClearErrors<any>;
     accept?: string;
-    onDismiss?: () => void;
-    disabled?: boolean;
-    onFileDialogCancel?: () => void;
-    onFileDialogOpen?: () => void;
-    onError?: (err: Error) => void;
-    validator?: <T extends File>(file: T) => FileError | FileError[] | null;
+    multiple?: boolean;
+    preview?: boolean;
 }
-export const FileUploader = (props: FileUploaderProps = {}) => {
-    const { accept } = {
+
+export const FileUploader = (props: PropsWithChildren<FileUploaderProps>) => {
+    const {
+        register,
+        label,
+        reset,
+        children,
+        setIsFileToUploadSelected,
+        errors,
+        className,
+        clearErrors,
+        accept = '',
+        multiple = false,
+        preview = true,
+    } = {
         ...props,
     };
 
-    const inputRef = useRef(null);
+    const [selectedFilesToUpload, setSelectedFilesToUpload] = useState<File[] | undefined>(undefined);
 
-    const packFiles = (files: File[]) => {
-        const formData = new FormData();
+    const { ref, name: inputName, ...rest } = register;
 
-        for (const [index, selectedFileToUpload] of [...files].entries()) {
-            formData.append(`file-${index}`, selectedFileToUpload, selectedFileToUpload.name);
-        }
+    const hiddenFileInput = useRef<HTMLInputElement | null>(null);
 
-        return formData;
+    // TODO: Integrate Drag and Drop
+    /*
+    const [isDragOver, setIsDragOver] = useState(false);
+
+    // Define the event handlers
+    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        setIsDragOver(true);
     };
 
-    const handleFileUpload = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        const files = (event.target as HTMLInputElement).files;
-        if (files && files.length > 0) {
-            // setSelectedFilesToUpload([...files]);
-            const packedFileData = packFiles([...files]);
-            return packedFileData;
-        }
-    }, []);
+    const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        setIsDragOver(false);
+    };
 
-    // const getRootProps = () => ({
-    //     tabIndex: 0,
-    //     role: 'button',
-    // });
+    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        setIsDragOver(false);
+        // Fetch the files
+        const droppedFiles = Array.from(event.dataTransfer.files);
+        setSelectedFilesToUpload(droppedFiles);
+    };
+    */
 
-    // const getInputProps = () => ({
-    //     type: 'file',
-    //     onChange: handleInputChange,
-    //     style: { display: 'none' },
-    // });
+    const clearAll = () => {
+        reset();
+        setSelectedFilesToUpload(undefined);
+        setIsFileToUploadSelected(false);
+    };
 
-    // return {
-    //     getRootProps,
-    //     getInputProps,
-    // };
-    // const handleUploadClick = () => inputRef.current?.click();
+    const handleSelectFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFiles = (e.target as HTMLInputElement).files || [];
+        clearErrors(inputName);
+        setSelectedFilesToUpload([...selectedFiles]);
+        setIsFileToUploadSelected(true);
+    };
+
     return (
-        <div>
-            {/* <label htmlFor="uploadInput">Browse</label> */}
-            <input
-                id="uploadInput"
-                ref={inputRef}
-                type="file"
-                onChange={handleFileUpload}
-                hidden
-                accept={accept}
-                {...rest}
-            />
-            <>{children}</>
+        <div className='file-upload-wrapper'>
+            <div aria-label="upload-files" className="file-upload">
+                <label aria-labelledby="uploadInput" className="file-upload-text" htmlFor="uploadInput">
+                    {label || Click_Or_Drag_File}
+                </label>
+                <input
+                    name={inputName}
+                    className={`file-upload-input ${className}`}
+                    id="uploadInput"
+                    type="file"
+                    multiple={multiple}
+                    accept={accept}
+                    {...rest}
+                    onChange={handleSelectFiles}
+                    ref={(e) => {
+                        ref(e);
+                        hiddenFileInput.current = e;
+                    }}
+                />
+            </div>
+            {preview && <PreviewFiles filesToPreview={selectedFilesToUpload} />}
+            {children}
+            {selectedFilesToUpload && <ResetFilesButton clearAll={clearAll} />}
+            <ErrorMessage errors={errors} name={inputName} render={({ message }) => <p style={{ color: 'red' }}>{message}</p>} />
         </div>
     );
 };

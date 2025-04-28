@@ -1,0 +1,16 @@
+{
+    "root": true,
+    "extends": ["@frontify/eslint-config-react"],
+    "settings": {
+        "react": {
+            "version": "detect",
+        },
+    },
+    "parserOptions": {
+        "project": ["./tsconfig.json", "./tsconfig.node.json"],
+    },
+    "rules":{
+        "linebreak-style": 0,
+        "endOfLine": "auto"
+      }
+}

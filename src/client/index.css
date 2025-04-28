@@ -1,3 +1,98 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--clr-surface-a0, white);
+    color: var(--clr-primary-a50, #000000);
+}
+
+[data-theme='light'] {
+    /** Base colors */
+    --clr-light-a0: #000000;
+    --clr-dark-a0: #ffffff;
+
+    /** Primary colors */
+    --clr-primary-a0: #c2a3b9;
+    --clr-primary-a10: #c7a8be;
+    --clr-primary-a20: #d6c2d0;
+    --clr-primary-a30: #5c4f58;
+    --clr-primary-a40: #3e353b;
+    --clr-primary-a50: #e4d5df;
+
+    /** Danger colors */
+    --clr-danger-a0: #b41c2b;
+    --clr-danger-a10: #851d22;
+    --clr-danger-a20: #581919;
+    --clr-danger-a30: #2f1310;
+
+    /** Success colors */
+    --clr-success-a0: #009f42;
+    --clr-success-a10: #167533;
+    --clr-success-a20: #184d25;
+    --clr-success-a30: #132916;
+
+    /** Warning colors */
+    --clr-warning-a0: #f0ad4e;
+    --clr-warning-a10: #af7f3c;
+    --clr-warning-a20: #71532a;
+    --clr-warning-a30: #392b19;
+
+    /** Info colors */
+    --clr-info-a0: #388cfa;
+    --clr-info-a10: #3267b5;
+    --clr-info-a20: #284475;
+    --clr-info-a30: #1a253b;
+
+    /** Neutral colors */
+    --clr-surface-a0: #ffffff;
+    --clr-surface-a10: #121212;
+    --clr-surface-a20: #919191;
+    --clr-surface-a30: #5e5e5e;
+    --clr-surface-a40: #303030;
+    --clr-surface-a50: #000000;
+
+    /** Disabled colors */
+    --clr-disabled-a0: #8080803d;
+    --clr-disabled-a10: #504f4f;
+}
+
+[data-theme='dark'] {
+    /** Base colors */
+    --clr-dark-a0: #000000;
+    --clr-light-a0: #ffffff;
+
+    /** Theme primary colors */
+    --clr-primary-a0: #c2a3b9;
+    --clr-primary-a10: #c9adc1;
+    --clr-primary-a20: #d0b7c8;
+    --clr-primary-a30: #d6c1d0;
+    --clr-primary-a40: #ddcbd8;
+    --clr-primary-a50: #e4d5df;
+    --clr-primary-a60: #cccccc;
+
+    /** Theme surface colors */
+    --clr-surface-a0: #121212;
+    --clr-surface-a10: #282828;
+    --clr-surface-a20: #3f3f3f;
+    --clr-surface-a30: #575757;
+    --clr-surface-a40: #717171;
+    --clr-surface-a50: #8b8b8b;
+
+    /** Theme tonal surface colors */
+    --clr-surface-tonal-a0: #211f20;
+    --clr-surface-tonal-a10: #363435;
+    --clr-surface-tonal-a20: #4c4a4b;
+    --clr-surface-tonal-a30: #636162;
+    --clr-surface-tonal-a40: #7b797a;
+    --clr-surface-tonal-a50: #949393;
+
+    /** Disabled colors */
+    --clr-disabled-a0: #eff2fa;
+    --clr-disabled-a10: #b2b5ba;
+}
